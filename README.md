@@ -30,19 +30,45 @@ This is my first time contributing to open source. So I am hoping to learn to un
 
 ### Problem Description
 
-It's a feature where, at the moment, search results do not show the narrator. Becuase the narrators do not show, some audiobooks have multiple recordings with different narrators and at the moment, the match is not correct because of this problem. 
+When matching or importing an audiobook that already exists in the library, Listenarr
+shows a list of candidate metadata results to choose from — but those results don't
+display the narrator. Many audiobooks have multiple recordings of the same title read
+by different narrators, so without the narrator shown, there's no reliable way to tell
+the candidates apart and pick the correct edition. The issue's screenshot contrasts
+this with Audiobookshelf's match screen, which surfaces the narrator and publication
+year for exactly this reason.
 
 ### Expected Behavior
 
-When importing/matching existing audiobooks into Listenarr, search results should show the narrator.
+When matching/importing an existing audiobook, each search result should display the
+narrator (ideally alongside the publication year), so users can distinguish between
+multiple recordings of the same book and select the right match.
 
 ### Current Behavior
 
-At the moment, the narrators do not show up on search results.
+The candidate match results show title, author, and cover, but omit the narrator,
+making it ambiguous which recording is which when several share a title.
 
 ### Affected Components
 
-The frontend / UI part of the project. This means I will be interacting with Vue and TypeScript the most in the Listenarr.application module.
+This is primarily a **frontend** change in the Vue + TypeScript code under `fe/`,
+not the C# backend. Key findings from exploring the codebase:
+
+- The data is already available. The `SearchResult` type (`fe/src/types.ts`, backed by
+  `listenarr.api/Models/SearchResult.cs`) already includes a narrator field, and the
+  metadata responses carry narrator info.
+- The "Add New" search flow (`fe/src/views/AddNewView.vue`) **already renders** the
+  narrator on its result cards — so the existing pattern to copy is already in the repo.
+- The gap is in the *existing-audiobook* match/identify flow, reached via the Edit
+  action on a library item, most likely `fe/src/components/EditAudiobookModal.vue`
+  (to be confirmed during reproduction). That component's results list is the one
+  missing the narrator line.
+- A backend touch in `listenarr.api/Services/SearchService.cs` may only be needed if
+  the match search uses a lighter endpoint that doesn't populate narrator — to be
+  verified by inspecting a result object during reproduction.
+
+Languages/tools involved: Vue 3, TypeScript (primary); possibly a small amount of
+C#/.NET if the backend enrichment turns out to be incomplete.
 
 ---
 

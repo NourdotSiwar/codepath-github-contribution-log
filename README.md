@@ -1,15 +1,23 @@
-# Contribution [#]: [Issue Title]
+# Contribution 552: When matching existing audiobooks, search results should show the narrator
 
-**Contribution Number:** [1 / 2 / 3]  
-**Student:** [Your Name]  
-**Issue:** [GitHub issue link]  
-**Status:** [Phase I / Phase II / Phase III / Phase IV] [In Progress / Complete]
+**Contribution Number:** 552
+**Student:** Nour Siwar
+**Issue:** [GitHub issue link](https://github.com/Listenarrs/Listenarr/issues/552)  
+**Status:** Phase I - Complete
 
 ---
 
 ## Why I Chose This Issue
 
-[1-2 paragraphs explaining why this issue interests you, how it matches your skills/learning goals, what you hope to learn]
+I like to read Fanfiction as a hobby and I found the project to be related to AudioBooks which I found interesting. 
+
+This issue interests me for several reasons:
+
+1. It is a simple feature which will help me ease into contributing to open source.
+2. It is easy to understand and it matches my skills in terms of C#
+3. I can ask Claude about Vue and TS to debug any problems while working on this feature since I do not know these languages yet.
+
+This is my first time contributing to open source. So I am hoping to learn to understand new codebases with the help of Claude as well as learn more about how different languages work with each other such as backend like C3 with frontend like TS. 
 
 ---
 
@@ -17,15 +25,15 @@
 
 ### Problem Description
 
-[In your own words, what's broken or missing?]
+It's a feature where, at the moment, search results do not show the narrator.
 
 ### Expected Behavior
 
-[What should happen?]
+When importing/matching existing audiobooks into Listenarr, search results should show the narrator. Some audiobooks have multiple recordings with different narrators and this would help get the correct match.
 
 ### Current Behavior
 
-[What actually happens?]
+At the moment, the narrators do not show up on search results.
 
 ### Affected Components
 

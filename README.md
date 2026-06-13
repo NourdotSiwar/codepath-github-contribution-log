@@ -76,50 +76,63 @@ C#/.NET if the backend enrichment turns out to be incomplete.
 
 ### Environment Setup
 
-[Notes on setting up your local development environment - challenges you faced, how you solved them]
+Set up local dev environment on Windows with WSL2. Frontend runs via Node.js 24 (npm run dev). Backend runs separately. Challenges faced: 
+  
+- global.json requires .NET 10 SDK — resolved by running backend through existing Windows install
+- WSL git ownership error — resolved with git config --global --add safe.directory
+- Library Import scan requires real audio files — empty placeholder files are skipped by the backend scanner
 
 ### Steps to Reproduce
 
-1. [Step 1]
-2. [Step 2]
-3. [Observed result]
+1. Open fe/src/components/domain/audiobook/LibraryImportSearchModal.vue lines 63–75
+2. Observe the result card template: renders title, authors[0].name, series, and asin — narrator field is absent
+3. Compare with fe/src/views/content/AddNewView.vue line 654: identical SearchResult data shape, but renders Narrated by {{ book.searchResult.narrator }}
+4. Observed result: Narrator data exists in the SearchResult type but is never rendered in the match modal, making it impossible to distinguish between multiple recordings of the same title
 
 ### Reproduction Evidence
 
-- **Commit showing reproduction:** [Link to commit in your fork]
-- **Screenshots/logs:** [If applicable]
-- **My findings:** [What you discovered during reproduction]
+- **Commit showing reproduction:** https://github.com/NourdotSiwar/Listenarr/tree/552-show-narrator-in-match-results
+- **Screenshots/logs:**  N/A — bug confirmed via code inspection
+- **My findings:** LibraryImportSearchModal.vue:63–75 omits narrator. The extractNarrators() helper (fe/src/utils/searchResultHelpers.ts) already exists and handles narrator extraction. The fix pattern is already present in AddNewView.vue:654 and SearchResultCard.vue:58. No backend changes needed — narrator data is already returned in the API response.
 
 ---
 
 ## Solution Approach
 
 ### Analysis
-
-[Your analysis of the root cause - what's causing the issue?]
+  
+Root cause: `fe/src/components/domain/audiobook/LibraryImportSearchModal.vue` lines 63–75 renders result cards with title, author, series, and ASIN but never reads the narrator field from the `SearchResult` object. The data is present — the `SearchResult` type already includes narrator — but no template code displays it in this component.
 
 ### Proposed Solution
 
-[High-level description of your fix approach]
+Add a narrator line to the result card template in `LibraryImportSearchModal.vue`, using the existing `extractNarrators()` helper from `fe/src/utils/searchResultHelpers.ts` to extract the narrator string from the result object, then conditionally render `Narrated by {{ narrator }}` beneath the existing meta line.
 
 ### Implementation Plan
 
 Using UMPIRE framework (adapted):
 
-**Understand:** [Restate the problem]
+**Understand:** When a user opens the Library Import match modal and searches for an audiobook, results show title, author, and ASIN but omit the narrator. This makes it impossible to tell apart multiple recordings of the same title by different narrators. The narrator should appear on each result card.
 
-**Match:** [What similar patterns/solutions exist in the codebase?]
+**Match:** `fe/src/views/content/AddNewView.vue:654` already renders `Narrated by {{ book.searchResult.narrator }}` using the same `SearchResult` data shape. `fe/src/components/search/SearchResultCard.vue:58` also renders narrator via a slot. `fe/src/utils/searchResultHelpers.ts` exports`extractNarrators()` which handles all narrator data formats (string, array of strings, array of objects with `.name`).
 
-**Plan:** [Step-by-step implementation plan]
-1. [Modify file X to do Y]
-2. [Add function Z]
-3. [Update tests]
+**Plan:**
 
-**Implement:** [Link to your branch/commits as you work]
+1. Modify `fe/src/components/domain/audiobook/LibraryImportSearchModal.vue` — in the result card template (lines 63–75), import `extractNarrators` from `searchResultHelpers.ts` and add a conditional narrator line after the`result-meta` span
 
-**Review:** [Self-review checklist - does it follow the project's contribution guidelines?]
+2. Update `fe/src/__tests__/LibraryImportSearchModal.spec.ts` — add a test case asserting narrator text is rendered when the result includes narrator data
 
-**Evaluate:** [How will you verify it works?]
+**Implement:** https://github.com/NourdotSiwar/Listenarr/tree/552-show-narrator-in-match-results *(commits will be added in Phase III)*
+
+**Review:**
+
+- [ ] One feature/bug fix per PR (CONTRIBUTING.md)
+- [ ] Frontend uses 2-space indentation
+- [ ] No console errors or warnings
+- [ ] Rebased on latest `canary`
+- [ ] Tests added/updated
+- [ ] PR targets `canary` branch
+
+**Evaluate:** Run `cd fe && npm run type-check` (no TS errors) and `npm run test:unit` (all tests pass including new narrator test). Manually confirm narrator appears on result cards in the Library Import match modal when searching for a book with known narrator data.
 
 ---
 

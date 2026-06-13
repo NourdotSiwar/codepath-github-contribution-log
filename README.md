@@ -6,7 +6,7 @@
 
 **Issue:** [GitHub issue link](https://github.com/Listenarrs/Listenarr/issues/552)
 
-**Status:** Phase I - Complete
+**Status:** Phase II - Complete
 
 **Fork Link:** [Listenarr](https://github.com/NourdotSiwar/Listenarr)
 

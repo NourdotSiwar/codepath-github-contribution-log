@@ -218,7 +218,13 @@ Key decisions:
 
 ### Challenges Overcome
 
-[What was hard and how you solved it]
+**WSL/Windows filesystem friction:** Running .NET and Node.js tools from WSL on a Windows-mounted filesystem caused repeated issues — git config writes were blocked, npm symlinks were broken, and MSBuild couldn't set timestamps on NTFS files. Solved each individually: used git env vars (`GIT_AUTHOR_NAME` etc.) to bypass config writes, ran frontend tests from Windows PowerShell, and redirected MSBuild intermediate output to the Linux filesystem (`/tmp`) via `Directory.Build.props`.
+
+**Backend required real audio files:** The library scanner skips zero-byte placeholder files, so the bug couldn't be reproduced with empty files. Downloaded a real MP3 from LibriVox and placed it under `/mnt/c/audiobooks/` to trigger a successful scan.
+
+**Understanding an unfamiliar codebase in two unfamiliar languages:** This was my first time reading Vue 3 and TypeScript. Used Claude to navigate the component tree, find where narrator data flowed through the app, and identify the exact pattern to copy — the `extractNarrators()` helper in `searchResultHelpers.ts` and the narrator rendering already present in `AddNewView.vue`.
+
+**Fresh backend instance reset configuration:** Restarting the backend wiped the root folder setting (new `.env/development` directory created). Had to re-add the root folder and re-scan before verifying the fix in the UI.
 
 ### What I'd Do Differently Next Time
 

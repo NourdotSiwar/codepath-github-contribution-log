@@ -6,7 +6,7 @@
 
 **Issue:** [GitHub issue link](https://github.com/Listenarrs/Listenarr/issues/552)
 
-**Status:** Phase II - Complete
+**Status:** Phase III - Complete
 
 **Fork Link:** [Listenarr](https://github.com/NourdotSiwar/Listenarr)
 
@@ -140,26 +140,42 @@ Using UMPIRE framework (adapted):
 
 ### Unit Tests
 
-- [ ] Test case 1: [Description]
-- [ ] Test case 2: [Description]
-- [ ] Test case 3: [Description]
+- [X] Test case 1: Narrator renders when result includes narrator data — mocks `advancedSearch` to return a  
+  result with `narrator: 'John Smith'`, mounts component, asserts `.result-narrator` contains "John Smith"
+- [X] Test case 2: Result thumbnails route through protected image helper — asserts `getProtectedImageSrc` called with correct URL and placeholder, asserts `img[src]` equals the protected URL
 
 ### Integration Tests
 
-- [ ] Integration scenario 1
-- [ ] Integration scenario 2
+  N/A — narrator data flows from the existing `/search` API endpoint which already
+  returns narrator; no backend changes required.
 
 ### Manual Testing
 
-[What you tested manually and results]
+  Ran local dev environment (WSL2 backend + Vite frontend). Scanned a real MP3 file,
+  opened Library Import match modal, searched "Criminal". Result card displayed
+  "Narrated by Kathleen Early" beneath the author line. Confirmed fix works
+  end-to-end.
+
 
 ---
 
 ## Implementation Notes
 
-### Week [X] Progress
+### Week 3 Progress
 
-[What you built this week, challenges faced, decisions made]
+Added narrator display to `LibraryImportSearchModal.vue` result cards. The narrator
+  data was already present in the `SearchResult` type and returned by the API — it
+  just was never rendered in this component.
+
+Key decisions:
+
+- Used the existing `extractNarrators()` utility from `searchResultHelpers.ts` rather than reading `result.narrator` directly — handles all narrator data formats (string, array of strings, array of `{name}` objects)
+
+- Matched existing `.result-meta` CSS style for visual consistency (0.75rem, #888,
+  ellipsis overflow)
+
+- No backend changes needed — confirmed via Network tab that narrator data was
+  already in API responses
 
 ### Week [Y] Progress
 
@@ -167,23 +183,30 @@ Using UMPIRE framework (adapted):
 
 ### Code Changes
 
-- **Files modified:** [List]
-- **Key commits:** [Links to important commits]
-- **Approach decisions:** [Why you chose certain approaches]
+- **Files modified:** 
+
+- `fe/src/components/domain/audiobook/LibraryImportSearchModal.vue` — added `extractNarrators` import, narrator span in result card template, `.result-narrator` CSS class
+- `fe/src/__tests__/LibraryImportSearchModal.spec.ts` — added narrator render test and protected image test
+
+- **Key commits:**  [Key Commits Link](https://github.com/NourdotSiwar/Listenarr/tree/552-show-narrator-in-match-results)
+- **Approach decisions:**  Copied the pattern from `AddNewView.vue:654` which already
+   renders narrator in the "Add New" search flow using the same `SearchResult` shape.
+  Reused `extractNarrators()` instead of accessing the field directly to stay
+  consistent with how the rest of the codebase handles this.
 
 ---
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when submitted]
+**PR Link:** (GitHub PR URL)[https://github.com/Listenarrs/Listenarr/pull/692]
 
-**PR Description:** [Draft or final PR description - much of the content above can be adapted]
+**PR Description:** Fixes #552. The Library Import match modal showed result cards with title, author, and ASIN but never displayed the narrator, making it impossible to distinguish between multiple recordings of the same title read by different narrators.
 
 **Maintainer Feedback:**
 - [Date]: [Summary of feedback received]
 - [Date]: [How you addressed it]
 
-**Status:** [Awaiting review / Iterating / Approved / Merged]
+**Status:** [ **Awaiting review** / Iterating / Approved / Merged]
 
 ---
 

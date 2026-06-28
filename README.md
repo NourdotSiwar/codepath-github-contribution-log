@@ -6,7 +6,7 @@
 
 **Issue:** [GitHub issue link](https://github.com/Listenarrs/Listenarr/issues/552)
 
-**Status:** Phase III - Complete
+**Status:** Phase IV - Complete
 
 **Fork Link:** [Listenarr](https://github.com/NourdotSiwar/Listenarr)
 
@@ -125,12 +125,12 @@ Using UMPIRE framework (adapted):
 
 **Review:**
 
-- [ ] One feature/bug fix per PR (CONTRIBUTING.md)
-- [ ] Frontend uses 2-space indentation
-- [ ] No console errors or warnings
-- [ ] Rebased on latest `canary`
-- [ ] Tests added/updated
-- [ ] PR targets `canary` branch
+- [X] One feature/bug fix per PR (CONTRIBUTING.md)
+- [X] Frontend uses 2-space indentation
+- [X] No console errors or warnings
+- [X] Rebased on latest `canary`
+- [X] Tests added/updated
+- [X] PR targets `canary` branch
 
 **Evaluate:** Run `cd fe && npm run type-check` (no TS errors) and `npm run test:unit` (all tests pass including new narrator test). Manually confirm narrator appears on result cards in the Library Import match modal when searching for a book with known narrator data.
 
@@ -177,9 +177,9 @@ Key decisions:
 - No backend changes needed — confirmed via Network tab that narrator data was
   already in API responses
 
-### Week [Y] Progress
+### Week 4 Progress
 
-[Continue documenting as you work]
+Waiting for review from the maintainers, no progress to be doucmented. 
 
 ### Code Changes
 
@@ -202,7 +202,7 @@ Key decisions:
 
 **PR Description:** Fixes #552. The Library Import match modal showed result cards with title, author, and ASIN but never displayed the narrator, making it impossible to distinguish between multiple recordings of the same title read by different narrators.
 
-**Maintainer Feedback:**
+**Maintainer Feedback:** (To be added)
 - [Date]: [Summary of feedback received]
 - [Date]: [How you addressed it]
 
@@ -234,6 +234,4 @@ Key decisions:
 
 ## Resources Used
 
-- [Link to helpful documentation]
-- [Tutorial or Stack Overflow post that helped]
-- [GitHub issues or discussions that helped]
+- Mainly used Claude to be able to read the codebase, identify the problem, understand where the problem could be located, as well as assist in understanding both ReadME.md and Contribution.md
